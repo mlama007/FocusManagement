@@ -8,30 +8,42 @@ export default new Vuex.Store({
     modalOpen: false,
     tasks: [
       {
-        title: "Dry Cleaning",
-        content: "Don't forget the suit!"
+        name: "Dry Cleaning",
+        notes: "Don't forget the suit!"
       },
       {
-        title: "Dog Food",
-        content:
-          "Taste of the Wild"
+        name: "Dog Food",
+        notes: "Taste of the Wild"
       },
       {
-        title: "Bills",
-        content:
-          "Internet bill!"
+        name: "Bills",
+        notes: "Internet bill!"
       }
     ]
   },
   mutations: {
     toggleModal (state, payload) {
-      state.modalOpen = !state.modalOpen
+      state.modalOpen = payload
     },
     deleteTask (state, index) {
       state.tasks.splice(index, 1);
+    },
+    addTasks (state, form) {
+      state.tasks.push(form);
     }
   },
   actions: {
-
+    openModal ({ commit }) {
+      commit('toggleModal', true);
+    },
+    closeModal ({ commit }) {
+      commit('toggleModal', false);
+    },
+    deleteTask ({ commit }, index) {
+      commit('deleteTask', index);
+    },
+    addTasks ({ commit }, form) {
+      commit('addTasks', form);
+    }
   }
 })
