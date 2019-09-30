@@ -1,17 +1,20 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
+    <Tasks/>
+    <AddFavModal/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Tasks from './components/Tasks.vue'
+import AddFavModal from './components/AddFavModal.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    Tasks,
+    AddFavModal
   }
 }
 </script>
