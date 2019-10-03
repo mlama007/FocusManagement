@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1 id="pageTitle">Tasks</h1>
+    <h1 id="pageTitle" tabindex="-1">Tasks</h1>
     <div v-if="!tasks.length">
-      <p>Looks like you've completed all your tasks!</p>
+      <p aria-live="polite">Looks like you've completed all your tasks!</p>
     </div>
     <ul v-else class="cards" aria-labelledby="pageTitle">
       <li v-for="(task, index) in tasks" :key="index" class="card">
@@ -11,13 +11,14 @@
           <p class="notes">{{task.notes}}</p>
         </div>
         <button
-          @click="deleteTask(index)"
+          @click="deleteTask({index, task})"
           class="delete"
           :aria-label="`Delete ${task.name}`"
         >❌</button>
       </li>
     </ul>
     <button @click="openModal()" class="addNew">Add New Favorite</button>
+    <div role="status">{{announce}}</div>
   </div>
 </template>
 
@@ -27,7 +28,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   name: "Tasks",
   computed: {
-    ...mapState(["modalOpen", "tasks"])
+    ...mapState(["modalOpen", "tasks", "announce"])
   },
   methods: {
     ...mapActions(["deleteTask", "openModal"])
@@ -81,5 +82,13 @@ export default {
     }
 }
 
+div[role=status]{
+  height: 0;
+  overflow: hidden;
+}
+
+[tabindex="-1"]:focus {
+  outline: none;
+}
 
 </style>

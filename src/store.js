@@ -19,31 +19,39 @@ export default new Vuex.Store({
         name: "Bills",
         notes: "Internet bill!"
       }
-    ]
+    ],
+    announce: ''
   },
   mutations: {
-    toggleModal (state, payload) {
+    TOGGLEMODAL (state, payload) {
       state.modalOpen = payload
     },
-    deleteTask (state, index) {
+    DELETETASK (state, index) {
       state.tasks.splice(index, 1);
     },
-    addTasks (state, form) {
+    ADDTASKS (state, form) {
       state.tasks.push(form);
+    },
+    UPDATEANNOUNCE (state, payload) {
+      state.announce = payload
     }
   },
   actions: {
     openModal ({ commit }) {
-      commit('toggleModal', true);
+      commit('TOGGLEMODAL', true);
     },
     closeModal ({ commit }) {
-      commit('toggleModal', false);
+      commit('TOGGLEMODAL', false);
     },
-    deleteTask ({ commit }, index) {
-      commit('deleteTask', index);
+    deleteTask ({ commit }, {index, task}) {
+      commit('DELETETASK', index);
+      commit('UPDATEANNOUNCE', `${task.name} has been deleted.`);
+      document.getElementById('pageTitle').focus();
     },
     addTasks ({ commit }, form) {
-      commit('addTasks', form);
+      commit('ADDTASKS', form);
+      commit('UPDATEANNOUNCE', `${form.name} has been added.`);
+      document.getElementById('pageTitle').focus();
     }
   }
 })
