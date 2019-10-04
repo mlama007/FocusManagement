@@ -42,6 +42,7 @@ export default new Vuex.Store({
     },
     closeModal ({ commit }) {
       commit('TOGGLEMODAL', false);
+      document.getElementById('addNew').focus();
     },
     deleteTask ({ commit }, {index, task}) {
       commit('DELETETASK', index);
@@ -51,7 +52,6 @@ export default new Vuex.Store({
     addTasks ({ commit }, form) {
       commit('ADDTASKS', form);
       commit('UPDATEANNOUNCE', `${form.name} has been added.`);
-      document.getElementById('pageTitle').focus();
     }
   }
 })

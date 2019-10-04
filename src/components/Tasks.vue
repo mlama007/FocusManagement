@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h1 id="pageTitle" tabindex="-1">Tasks</h1>
+    <header>
+      <h1 id="pageTitle" tabindex="-1">Tasks</h1>
+    </header>
     <div v-if="!tasks.length">
       <p aria-live="polite">Looks like you've completed all your tasks!</p>
     </div>
@@ -17,7 +19,7 @@
         >❌</button>
       </li>
     </ul>
-    <button @click="openModal()" class="addNew">Add New Favorite</button>
+    <button @click="openModal()" class="addNew" id="addNew">Add New Favorite</button>
     <div role="status">{{announce}}</div>
   </div>
 </template>

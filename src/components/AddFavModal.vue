@@ -3,16 +3,16 @@
     <div class="modal-mask">
       <div class="modal-wrapper" @click="closeModal()">
         <div class="modal-container" @click.stop>
-          <h2 id="newTask">Create New Task</h2>
+          <h2 id="newTask" tabindex="-1" v-focus>Create New Task</h2>
           <form action="submit">
             <div class="inputs">
               <label for="task" id="name">Name:</label>
-              <input id="task" type="text" v-model="form.name" required />
+              <input id="task" type="text" v-model="form.name" required/>
             </div>
 
             <div class="inputs">
               <label for="task_notes" id="notes">Notes:</label>
-              <input id="task_notes" type="text" v-model="form.notes" required />
+              <input id="task_notes" type="text" v-model="form.notes" required/>
             </div>
 
             <span class="buttons">
@@ -66,6 +66,13 @@ export default {
       this.addTasks(form);
       this.form = {};
       this.closeModal();
+    }
+  },
+  directives: {
+    focus: {
+      inserted: function(el) {
+        el.focus();
+      }
     }
   }
 };
