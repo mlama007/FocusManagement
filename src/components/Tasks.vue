@@ -17,7 +17,7 @@
         >❌</button>
       </li>
     </ul>
-    <button @click="openModal()" class="addNew">Add New Favorite</button>
+    <button @click="openModal()" class="addNew" id="addNew">Add New Favorite</button>
     <div role="status">{{announce}}</div>
   </div>
 </template>
