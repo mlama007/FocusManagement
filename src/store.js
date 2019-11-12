@@ -49,7 +49,8 @@ export default new Vuex.Store({
       commit('UPDATEANNOUNCE', `${task.name} has been deleted.`);
       document.getElementById('pageTitle').focus();
     },
-    addTasks ({ commit }, form) {
+    addTasks ({ commit }, {formName, formNotes}) {
+      let form = {name: formName, notes: formNotes}
       commit('ADDTASKS', form);
       commit('UPDATEANNOUNCE', `${form.name} has been added.`);
     }

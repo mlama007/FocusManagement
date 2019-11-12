@@ -2,31 +2,39 @@
   <div v-if="modalOpen">
     <div class="modal-mask">
       <div class="modal-wrapper" @click="closeModal()">
-        <div class="modal-container" @click.stop role="dialog" aria-labelledby="newTask" aria-modal="true">
+        <div
+          class="modal-container"
+          @click.stop
+          role="dialog"
+          aria-labelledby="newTask"
+          aria-modal="true"
+        >
           <h2 id="newTask">Create New Task</h2>
-          <form action="submit">
+          <form @submit.prevent="submit" action="submit" autocomplete="on">
             <!-- Focus Guard -->
-            <div id="focusguard-1" tabindex="0" @focus="focusOnLast"></div>
+            <div id="focusGuardStart" tabindex="0" @focus="focusOnLast"></div>
+
             <div class="inputs">
               <label for="task">Name:</label>
-              <input id="task" type="text" v-focus v-model="form.name" ref="first"/>
+              <input id="task" type="text" v-focus v-model="formName" ref="first" required />
             </div>
 
             <div class="inputs">
               <label for="task_notes" id="notes">Notes:</label>
-              <input id="task_notes" type="text" v-model="form.notes" required/>
+              <input id="task_notes" type="text" v-model="formNotes" required />
             </div>
 
             <span class="buttons">
               <button type="button" @click="cancel()" id="cancel">Cancel</button>
               <button
                 type="submit"
-                @click="submit(form)"
+                @click="submit({formName, formNotes})"
                 ref="last"
-                :aria-invalid="!form.name || !form.notes ? true : false"
+                :aria-invalid="!formName || !formNotes ? true : false"
               >Add</button>
+
               <!-- Focus Guard -->
-              <div id="focusguard-2" tabindex="0" @focus="focusOnFirst"></div>
+              <div id="focusGuardEnd" tabindex="0" @focus="focusOnFirst"></div>
             </span>
           </form>
         </div>
@@ -42,7 +50,8 @@ export default {
   name: "AddFavModal",
   data() {
     return {
-      form: {}
+      formName: '',
+      formNotes: ''
     };
   },
   computed: {
@@ -63,18 +72,20 @@ export default {
   methods: {
     ...mapActions(["closeModal", "addTasks", "initialFocus"]),
     focusOnFirst() {
-        this.$nextTick(() => this.$refs.first.focus())
+      this.$nextTick(() => this.$refs.first.focus());
     },
     focusOnLast() {
-      this.$nextTick(() => this.$refs.last.focus())
+      this.$nextTick(() => this.$refs.last.focus());
     },
     cancel() {
-      this.form = {};
+      this.formName = '',
+      this.formNotes = '',
       this.closeModal();
     },
     submit(form) {
       this.addTasks(form);
-      this.form = {};
+      this.formName = '',
+      this.formNotes = '',
       this.closeModal();
     }
   },
@@ -140,10 +151,9 @@ export default {
 }
 
 #focusguard-1,
-#focusguard-2{
+#focusguard-2 {
   &:focus {
     outline: 0;
   }
 }
-
 </style>

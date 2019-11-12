@@ -3,24 +3,26 @@
     <header>
       <h1 id="pageTitle" tabindex="-1">Tasks</h1>
     </header>
-    <div v-if="!tasks.length">
-      <p aria-live="polite">Looks like you've completed all your tasks!</p>
-    </div>
-    <ul v-else class="cards" aria-labelledby="pageTitle">
-      <li v-for="(task, index) in tasks" :key="index" class="card">
-        <div>
-          <h2 class="name">{{task.name}}</h2>
-          <p class="notes">{{task.notes}}</p>
-        </div>
-        <button
-          @click="deleteTask({index, task})"
-          class="delete"
-          :aria-label="`Delete ${task.name}`"
-        >❌</button>
-      </li>
-    </ul>
-    <button @click="openModal()" class="addNew" id="addNew">Add New Favorite</button>
-    <div role="status">{{announce}}</div>
+    <main>
+      <div v-if="!tasks.length">
+        <p aria-live="polite">Looks like you've completed all your tasks!</p>
+      </div>
+      <ul v-else class="cards" aria-labelledby="pageTitle">
+        <li v-for="(task, index) in tasks" :key="index" class="card">
+          <div>
+            <h2 class="name">{{task.name}}</h2>
+            <p class="notes">{{task.notes}}</p>
+          </div>
+          <button
+            @click="deleteTask({index, task})"
+            class="delete"
+            :aria-label="`Delete ${task.name}`"
+          >❌</button>
+        </li>
+      </ul>
+      <button @click="openModal()" class="addNew" id="addNew">Add New Task</button>
+      <div role="status">{{announce}}</div>
+    </main>
   </div>
 </template>
 
