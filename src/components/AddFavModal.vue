@@ -1,13 +1,15 @@
 <template>
-  <div v-if="modalOpen" role="dialog" aria-labelledby="newTask" aria-modal="true">
+  <div v-if="modalOpen">
     <div class="modal-mask">
       <div class="modal-wrapper" @click="closeModal()">
-        <div class="modal-container" @click.stop>
-          <h2 id="newTask" tabindex="-1" v-focus>Create New Task</h2>
+        <div class="modal-container" @click.stop role="dialog" aria-labelledby="newTask" aria-modal="true">
+          <h2 id="newTask">Create New Task</h2>
           <form action="submit">
+            <!-- Focus Guard -->
+            <div id="focusguard-1" tabindex="0" @focus="focusOnLast"></div>
             <div class="inputs">
-              <label for="task" id="name">Name:</label>
-              <input id="task" type="text" v-model="form.name" required/>
+              <label for="task">Name:</label>
+              <input id="task" type="text" v-focus v-model="form.name" ref="first"/>
             </div>
 
             <div class="inputs">
@@ -16,13 +18,15 @@
             </div>
 
             <span class="buttons">
-              <button type="button" @click="cancel()">Cancel</button>
+              <button type="button" @click="cancel()" id="cancel">Cancel</button>
               <button
                 type="submit"
                 @click="submit(form)"
-                :disabled="!form.name || !form.notes"
+                ref="last"
                 :aria-invalid="!form.name || !form.notes ? true : false"
               >Add</button>
+              <!-- Focus Guard -->
+              <div id="focusguard-2" tabindex="0" @focus="focusOnFirst"></div>
             </span>
           </form>
         </div>
@@ -57,7 +61,13 @@ export default {
     });
   },
   methods: {
-    ...mapActions(["closeModal", "addTasks"]),
+    ...mapActions(["closeModal", "addTasks", "initialFocus"]),
+    focusOnFirst() {
+        this.$nextTick(() => this.$refs.first.focus())
+    },
+    focusOnLast() {
+      this.$nextTick(() => this.$refs.last.focus())
+    },
     cancel() {
       this.form = {};
       this.closeModal();
@@ -128,4 +138,12 @@ export default {
     font-size: 14px;
   }
 }
+
+#focusguard-1,
+#focusguard-2{
+  &:focus {
+    outline: 0;
+  }
+}
+
 </style>
