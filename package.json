@@ -12,6 +12,7 @@
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.0",
     "vue": "^2.6.10",
+    "vuelidate": "^0.7.4",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

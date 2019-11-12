@@ -10,27 +10,50 @@
           aria-modal="true"
         >
           <h2 id="newTask">Create New Task</h2>
-          <form @submit.prevent="submit" action="submit" autocomplete="on">
+          <form @submit.prevent="submit({formName, formNotes})" action="submit" autocomplete="on">
             <!-- Focus Guard -->
             <div id="focusGuardStart" tabindex="0" @focus="focusOnLast"></div>
 
-            <div class="inputs">
+            <div class="inputs" :class="{invalid: $v.formName.$error}">
               <label for="task">Name:</label>
-              <input id="task" type="text" v-focus v-model="formName" ref="first" required />
+              <input
+                id="task"
+                type="text"
+                v-focus
+                v-model="formName"
+                ref="formName"
+                required
+                @blur="$v.formName.$touch()"
+              />
             </div>
+            <p
+              class="invalid"
+              v-if="!$v.formName.minLength && $v.formName.$error"
+              aria-live="assertive"
+            >Name must have at least {{$v.formName.$params.minLength.min}} characters</p>
 
-            <div class="inputs">
+            <div class="inputs" :class="{invalid: $v.formNotes.$error}">
               <label for="task_notes" id="notes">Notes:</label>
-              <input id="task_notes" type="text" v-model="formNotes" required />
+              <input
+                id="task_notes"
+                type="text"
+                ref='formNotes'
+                v-model="formNotes"
+                required
+                @blur="$v.formNotes.$touch()"
+              />
             </div>
+            <p
+              class="invalid"
+              v-if="!$v.formNotes.minLength && $v.formNotes.$error"
+              aria-live="assertive"
+            >Notes must have at least {{$v.formNotes.$params.minLength.min}} characters</p>
 
             <span class="buttons">
               <button type="button" @click="cancel()" id="cancel">Cancel</button>
               <button
                 type="submit"
-                @click="submit({formName, formNotes})"
                 ref="last"
-                :aria-invalid="!formName || !formNotes ? true : false"
               >Add</button>
 
               <!-- Focus Guard -->
@@ -45,14 +68,25 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import { required, minLength } from "vuelidate/lib/validators";
 
 export default {
   name: "AddFavModal",
   data() {
     return {
-      formName: '',
-      formNotes: ''
+      formName: null,
+      formNotes: null
     };
+  },
+  validations: {
+    formName: {
+      required,
+      minLength: minLength(2)
+    },
+    formNotes: {
+      required,
+      minLength: minLength(2)
+    }
   },
   computed: {
     ...mapState(["modalOpen", "tasks"])
@@ -72,21 +106,31 @@ export default {
   methods: {
     ...mapActions(["closeModal", "addTasks", "initialFocus"]),
     focusOnFirst() {
-      this.$nextTick(() => this.$refs.first.focus());
+      this.$nextTick(() => this.$refs.formName.focus());
     },
     focusOnLast() {
       this.$nextTick(() => this.$refs.last.focus());
     },
     cancel() {
-      this.formName = '',
-      this.formNotes = '',
-      this.closeModal();
+      (this.formName = ""), (this.formNotes = ""), this.closeModal();
     },
     submit(form) {
-      this.addTasks(form);
-      this.formName = '',
-      this.formNotes = '',
-      this.closeModal();
+      if (!this.$v.$invalid) {
+        this.addTasks(form);
+        this.formName = "",
+        this.formNotes = "",
+        this.$v.$reset()
+        this.closeModal();
+      } else {
+        for(let i=0; i < Object.keys(this.$v).length ; i++) {
+          const key = Object.keys(this.$v)[i];
+          if (key.includes('$')) continue;
+          const input = this.$v[key];
+          if(input.$error){
+            this.$refs[key].focus()
+          }
+        }
+      }
     }
   },
   directives: {
@@ -154,6 +198,17 @@ export default {
 #focusguard-2 {
   &:focus {
     outline: 0;
+  }
+}
+
+.invalid {
+  color: #b50000;
+  label {
+    color: #b50000;
+  }
+  input {
+    border: 1px solid #b50000;
+    background-color: #f7e9e9;
   }
 }
 </style>
