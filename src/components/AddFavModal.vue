@@ -9,11 +9,18 @@
           aria-labelledby="newTask"
           aria-modal="true"
         >
-          <h2 id="newTask">Create New Task</h2>
-          <form @submit.prevent="submit({formName, formNotes})" action="submit" autocomplete="on">
-            <!-- Focus Guard -->
-            <div id="focusGuardStart" tabindex="0" @focus="focusOnLast"></div>
+          <!-- Focus Guard -->
+          <div id="focusGuardStart" tabindex="0" @focus="focusOnLast"></div>
+          <button
+            ref="close"
+            @click="closeModal()"
+            class="close"
+            aria-label="Close Create New Task"
+          >❌</button>
 
+          <h2 id="newTask">Create New Task</h2>
+
+          <form @submit.prevent="submit({formName, formNotes})" action="submit" autocomplete="on">
             <div class="inputs" :class="{invalid: $v.formName.$error}">
               <label for="task">Name:</label>
               <input
@@ -106,7 +113,7 @@ export default {
   methods: {
     ...mapActions(["closeModal", "addTasks", "initialFocus"]),
     focusOnFirst() {
-      this.$nextTick(() => this.$refs.formName.focus());
+      this.$nextTick(() => this.$refs.close.focus());
     },
     focusOnLast() {
       this.$nextTick(() => this.$refs.last.focus());
@@ -122,12 +129,11 @@ export default {
         this.$v.$reset()
         this.closeModal();
       } else {
-        for(let i=0; i < Object.keys(this.$v).length ; i++) {
+       for(let i=0; i < Object.keys(this.$v).length ; i++) {
           const key = Object.keys(this.$v)[i];
-          if (key.includes('$')) continue;
-          const input = this.$v[key];
-          if(input.$error){
+          if(!key.includes('$') && this.$v[key].$error){
             this.$refs[key].focus()
+            return
           }
         }
       }
@@ -170,6 +176,14 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
+}
+
+.close{
+  float: right;
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 .buttons {
