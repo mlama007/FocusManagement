@@ -30,11 +30,13 @@
                 v-model="formName"
                 ref="formName"
                 required
+                aria-describedby="invalidName"
                 @blur="$v.formName.$touch()"
               />
             </div>
             <p
               class="invalid"
+              id="invalidName"
               v-if="!$v.formName.minLength && $v.formName.$error"
               aria-live="assertive"
             >Name must have at least {{$v.formName.$params.minLength.min}} characters</p>
@@ -47,11 +49,13 @@
                 ref='formNotes'
                 v-model="formNotes"
                 required
+                aria-describedby="invalidNotes"
                 @blur="$v.formNotes.$touch()"
               />
             </div>
             <p
               class="invalid"
+              id="invalidNotes"
               v-if="!$v.formNotes.minLength && $v.formNotes.$error"
               aria-live="assertive"
             >Notes must have at least {{$v.formNotes.$params.minLength.min}} characters</p>
